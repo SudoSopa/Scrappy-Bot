@@ -1,8 +1,9 @@
 # main.py
 
-# TODO - Use environmental variables to keep bot token a secret when uploading to github
 
 import discord
+from dotenv import load_dotenv # Using env vars to hide token
+import os # Reads .env to get token
 
 client = discord.Client()
 
@@ -15,7 +16,8 @@ async def on_message(message):
 	if message.author == client.user: #Prevents bot replying to its own msg
 		return
 
-	if message.content.startswith('$hello'):
+	if message.content.startswith('hello'):
 		await message.channel.send('Hello from Scrappy!')
 
-client.run('Bot token here')
+load_dotenv('.env')
+client.run(os.getenv('BOT_TOKEN'))
