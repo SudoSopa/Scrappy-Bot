@@ -24,7 +24,9 @@ async def on_message(message):
 async def on_raw_reaction_add(payload):
 	#print("Reaction detected!")
 	channel = client.get_channel(payload.channel_id)
-	await channel.send('Reaction detected!')
+	await channel.send('Reaction detected!\n' + \
+			   'Message ID: ' + str(payload.message_id) +'\n' +  \
+			   'Reacting User\'s ID: ' + str(payload.user_id))
 
 
 load_dotenv('.env')
