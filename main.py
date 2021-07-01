@@ -34,7 +34,10 @@ async def on_raw_reaction_add(payload):
 	"""
 
 	if payload.emoji.name == '🛑':
-		await modlog.send('Message reported from ' + str(channel))
+		await modlog.send('Message reported!\n' + \
+			   'Message ID: ' + str(payload.message_id) +'\n' +  \
+			   'Channel ID: ' + str(client.get_channel(payload.channel_id)) + '\n' + \
+			   'Reacting User\'s ID: ' + str(payload.user_id))
 
 	
 
