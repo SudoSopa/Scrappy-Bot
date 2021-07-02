@@ -25,6 +25,7 @@ async def on_raw_reaction_add(payload):
 	#print("Reaction detected!")
 	channel = client.get_channel(payload.channel_id)
 	modlog = client.get_channel(859678510780121098) #Currently fake-modlog
+	message = await channel.fetch_message(payload.message_id)
 	"""
 	await channel.send('Reaction detected!\n' + \
 			   'Message ID: ' + str(payload.message_id) +'\n' +  \
@@ -34,8 +35,10 @@ async def on_raw_reaction_add(payload):
 	"""
 
 	if payload.emoji.name == '🛑':
+		await message.clear_reaction('🛑')
 		await modlog.send('Message reported!\n' + \
-			   'Message ID: ' + str(payload.message_id) +'\n' +  \
+			   'Message Contents ' + message.content + '\n' + \
+			   'Message Link: ' + message.jump_url +'\n' +  \
 			   'Channel ID: ' + str(client.get_channel(payload.channel_id)) + '\n' + \
 			   'Reacting User\'s ID: ' + str(payload.user_id))
 
