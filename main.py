@@ -36,11 +36,19 @@ async def on_raw_reaction_add(payload):
 
 	if payload.emoji.name == '🛑':
 		await message.clear_reaction('🛑')
+		await modlog.send('@BotDev Message reported!') 
+		#await modlog.send('Message reported! {}'.format(message.format.mention)) #Currently pings author message, change to Bot dev, then Mod role later
+		embedReport = discord.Embed(title=message.author)
+	
+		await modlog.send(embed=embedReport)
+
+		""" #Keep this to have necessary data
 		await modlog.send('Message reported!\n' + \
 			   'Message Contents ' + message.content + '\n' + \
 			   'Message Link: ' + message.jump_url +'\n' +  \
 			   'Channel ID: ' + str(client.get_channel(payload.channel_id)) + '\n' + \
 			   'Reacting User\'s ID: ' + str(payload.user_id))
+		"""
 
 	
 
