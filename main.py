@@ -38,7 +38,10 @@ async def on_raw_reaction_add(payload):
 		await message.clear_reaction('🛑')
 		await modlog.send('@BotDev Message reported!') 
 		#await modlog.send('Message reported! {}'.format(message.format.mention)) #Currently pings author message, change to Bot dev, then Mod role later
-		embedReport = discord.Embed(title=message.author)
+
+		# Build embed fields then send
+		embedDescription = 'Reported message sent by AUTHOR NAME HERE in ' + str(client.get_channel(payload.channel_id)) + '\n' + message.jump_url 
+		embedReport = discord.Embed(title=message.author, description=embedDescription)
 	
 		await modlog.send(embed=embedReport)
 
