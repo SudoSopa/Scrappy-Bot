@@ -1,6 +1,6 @@
 # main.py
 
-import discord
+import discord	
 from dotenv import load_dotenv # Using env vars to hide token
 import os # Reads .env to get token
 
@@ -40,8 +40,13 @@ async def on_raw_reaction_add(payload):
 		#await modlog.send('Message reported! {}'.format(message.format.mention)) #Currently pings author message, change to Bot dev, then Mod role later
 
 		# Build embed fields then send
-		embedDescription = 'Reported message sent by AUTHOR NAME HERE in ' + str(client.get_channel(payload.channel_id)) + '\n' + message.jump_url 
-		embedReport = discord.Embed(title=message.author, description=embedDescription)
+		embedDescription = '**Reported message sent by {} '.format(message.author.mention) + \
+			     	   'in {}**'.format(message.channel.mention) +  '\n' + \
+			     	   message.content + '\n\n' + \
+			     '[Jump to Message](' + message.jump_url + ')' 
+
+		embedReport = discord.Embed(description=embedDescription)
+		embedReport.add_field(name='Report sent by', value=payload.member.mention, inline=False)
 	
 		await modlog.send(embed=embedReport)
 
