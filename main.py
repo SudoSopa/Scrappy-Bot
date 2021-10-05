@@ -24,7 +24,8 @@ async def on_message(message):
 async def on_raw_reaction_add(payload):
 	#print("Reaction detected!")
 	channel = client.get_channel(payload.channel_id)
-	modlog = client.get_channel(859678510780121098) #Currently fake-modlog
+	modlog = client.get_channel(611980801969487882) 
+	fakemodlog = client.get_channel(859678510780121098) #for testing
 	message = await channel.fetch_message(payload.message_id)
 	"""
 	await channel.send('Reaction detected!\n' + \
@@ -36,7 +37,7 @@ async def on_raw_reaction_add(payload):
 
 	if payload.emoji.name == '🛑':
 		await message.clear_reaction('🛑')
-		await modlog.send('@BotDev Message reported!') 
+		await modlog.send('<@&370637282648260608> <@&894752798305038386>\n🚨 Message Reported! 🚨') 
 		#await modlog.send('Message reported! {}'.format(message.format.mention)) #Currently pings author message, change to Bot dev, then Mod role later
 
 		# Build embed fields then send
@@ -45,9 +46,10 @@ async def on_raw_reaction_add(payload):
 			     	   message.content + '\n\n' + \
 			     '[Jump to Message](' + message.jump_url + ')' 
 
-		embedReport = discord.Embed(description=embedDescription)
+		embedReport = discord.Embed(description=embedDescription, color=discord.Colour.red())
 		embedReport.add_field(name='Report sent by', value=payload.member.mention, inline=False)
 	
+		#await modlog.send(embed=embedReport)
 		await modlog.send(embed=embedReport)
 
 		""" #Keep this to have necessary data
@@ -59,6 +61,27 @@ async def on_raw_reaction_add(payload):
 		"""
 
 	
+@client.event
+async def on_message(message):
+	
+	fakemodlog = client.get_channel(859678510780121098) #for testing
+	modlog = client.get_channel(611980801969487882) #for the real deal
+
+	#if DM message
+	if not message.guild:
+		await fakemodlog.send("DM received!\n\n")
+		
+		#Build embed
+		embedDescription = message.content
+
+		#init embed
+		embedDM = discord.Embed(description=embedDescription)
+
+		#send embed
+		await modlog.send(embed=embedDM)
+	
+
+	#await fakemodlog.send("Message received! No DM check.")
 
 
 load_dotenv('.env')
