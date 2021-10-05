@@ -8,6 +8,9 @@ intents = discord.Intents(guild_messages=True, guild_reactions=True)
 
 client = discord.Client()
 
+mailopen = True #Set to false to turn off Scrappy DMs
+#botid = 855953077324742686 #Bot's user ID, for preventing DM recursion
+
 @client.event
 async def on_ready():
 	print('We have logged in as {0.user}'.format(client))
@@ -66,19 +69,26 @@ async def on_message(message):
 	
 	fakemodlog = client.get_channel(859678510780121098) #for testing
 	modlog = client.get_channel(611980801969487882) #for the real deal
+	channel = client.get_channel(message.channel)
 
-	#if DM message
-	if not message.guild:
-		#await fakemodlog.send("DM received!\n\n")
+	if (not message.guild) and (not message.author.bot):
+		if mailopen:
+			await modlog.send("You Got Mail! 📬")
+			
+			#Build embed
+			embedDescription = message.content
+
+			#init and send embed
+			embedDM = discord.Embed(description=embedDescription)
+			#await fakemodlog.send(embed=embedDM)
+			await modlog.send(embed=embedDM)
+
+			#send user confirmation
+			await message.channel.send('Message successfully sent to Scrappy Squad staff.')
 		
-		#Build embed
-		embedDescription = message.content
+		elif not mailopen:
+			await message.channel.send("If you are trying to anonymously message Scrappy Squad staff, the feature has been disabled. Contact role '@Tech Guy' for more information.")
 
-		#init embed
-		embedDM = discord.Embed(description=embedDescription)
-
-		#send embed
-		await modlog.send(embed=embedDM)
 	
 
 	#await fakemodlog.send("Message received! No DM check.")
