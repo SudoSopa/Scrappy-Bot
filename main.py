@@ -69,7 +69,7 @@ async def on_message(message):
 
 	#if DM message
 	if not message.guild:
-		await fakemodlog.send("DM received!\n\n")
+		#await fakemodlog.send("DM received!\n\n")
 		
 		#Build embed
 		embedDescription = message.content
