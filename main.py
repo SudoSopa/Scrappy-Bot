@@ -8,7 +8,7 @@ intents = discord.Intents(guild_messages=True, guild_reactions=True)
 
 client = discord.Client()
 
-mailopen = True #Set to false to turn off Scrappy DMs
+mailopen = False #Set to false to turn off Scrappy DMs
 #botid = 855953077324742686 #Bot's user ID, for preventing DM recursion
 
 @client.event
@@ -40,7 +40,6 @@ async def on_raw_reaction_add(payload):
 
 	if payload.emoji.name == '🛑':
 		await message.clear_reaction('🛑')
-		await modlog.send('<@&370637282648260608> <@&894752798305038386>\n🚨 Message Reported! 🚨') 
 		#await modlog.send('Message reported! {}'.format(message.format.mention)) #Currently pings author message, change to Bot dev, then Mod role later
 
 		# Build embed fields then send
@@ -52,8 +51,11 @@ async def on_raw_reaction_add(payload):
 		embedReport = discord.Embed(description=embedDescription, color=discord.Colour.red())
 		embedReport.add_field(name='Report sent by', value=payload.member.mention, inline=False)
 	
+		await fakemodlog.send('🚨 Message Reported! 🚨') 
+		await fakemodlog.send(embed=embedReport)
+		#await modlog.send('<@&370637282648260608> <@&894752798305038386>\n🚨 Message Reported! 🚨') 
 		#await modlog.send(embed=embedReport)
-		await modlog.send(embed=embedReport)
+		await payload.member.send(content="📬 Message sent to mods successfully! Here is your copy: ", embed=embedReport)
 
 		""" #Keep this to have necessary data
 		await modlog.send('Message reported!\n' + \
@@ -64,6 +66,7 @@ async def on_raw_reaction_add(payload):
 		"""
 
 	
+#When any message sent
 @client.event
 async def on_message(message):
 	
@@ -71,6 +74,7 @@ async def on_message(message):
 	modlog = client.get_channel(611980801969487882) #for the real deal
 	channel = client.get_channel(message.channel)
 
+	#Check that message is not in a server, and not from a bot
 	if (not message.guild) and (not message.author.bot):
 		if mailopen:
 			await modlog.send("You Got Mail! 📬")
@@ -87,7 +91,7 @@ async def on_message(message):
 			await message.channel.send('Message successfully sent to Scrappy Squad staff.')
 		
 		elif not mailopen:
-			await message.channel.send("If you are trying to anonymously message Scrappy Squad staff, the feature has been disabled. Contact role '@Tech Guy' for more information.")
+			await message.channel.send("If you are trying to anonymously message Scrappy Squad staff, the feature has been temporarily disabled due to technical issues. Contact role '@Tech Guy' for more information.")
 
 	
 
